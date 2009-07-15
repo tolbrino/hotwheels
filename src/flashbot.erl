@@ -71,8 +71,7 @@ not_connected(connect, State) ->
         {ok, Sock} ->
             State#state.parent ! connected,
             ping(State#state{socket = Sock}, no_token);
-        Error ->
-            io:format("connect error: ~p~n", [Error]),
+        _ ->
             reconnect(),
             {next_state, not_connected, State}
     end.

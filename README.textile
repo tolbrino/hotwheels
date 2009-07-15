@@ -61,3 +61,19 @@ setup: 14293.01ms, n: 20000, run: 21956.94ms
  3277.0740ms | max   
 ok
 </code></pre>
+
+h1. Notes
+
+On Leopard:
+
+<pre><code>
+cat /etc/sysctl.conf 
+kern.maxfiles=102400
+kern.maxfilesperproc=40960
+net.inet.ip.portrange.hifirst=10000
+net.inet.ip.portrange.first=10000
+
+grep ulimit ~/.bash_profile
+ulimit -n 30720 
+</code></pre>
+

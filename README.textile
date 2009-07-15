@@ -1,0 +1,63 @@
+h1. Janus
+
+Janus is a messaging server optimized to unicast over TCP to thousands of clients subscribed to topics of interest.
+
+The ultimate goal is to maintain a latency of less than 2 seconds for 20 thousand clients on Amazon EC2 (small instance).
+
+h1. License
+
+Janus is available under the MIT license.
+
+h1. Bounty and rules
+
+1) Unicast to 20K clients in < 1s (max latency) nets you a $1000 bounty if you are the first person to achieve this. Unicast in < 2s (max latency) nets you a $500 bounty.
+
+2) Final proof has to be from EC2, one small instance for the server and one for the bots.
+
+3) {packet, 0}
+
+4) TCP, not UDP.
+
+5) No change of the protocol unless I agree to it. 
+
+h1. Installation
+
+Janus requires at least OTP R13B01.
+
+Create a soft link from janus/mochiweb to your Mochiweb installation.
+
+h1. Running 
+
+1) 'make run1' to start the server
+2) 'make sh' in a different window to run clients
+3) 'bot:test(flashbot, 20000).' to run 20k bots on the same machine
+4) 'bot:test(flashbot, 20000, 'host', 8081).' if the server is somewhere else
+
+You should see output like this if everything goes well (MacBook Pro Core2Duo, 2.93Ghz, SSD):
+
+<pre><code>
+(debug@biggie.local)5> bot:test(flashbot,10000).
+
+=INFO REPORT==== 15-Jul-2009::19:44:20 ===
+setup: 5055.70ms, n: 10000, run: 7524.29ms
+    1.8690ms | min   
+  500.0000ms | 2125   -  21.25%
+ 1000.0000ms | 5010   -  50.10%
+ 1500.0000ms | 2865   -  28.65%
+ 1269.7850ms | max   
+ok
+(debug@biggie.local)5> bot:test(flashbot,20000).
+
+=INFO REPORT==== 15-Jul-2009::19:44:55 ===
+setup: 14293.01ms, n: 20000, run: 21956.94ms
+    2.4850ms | min   
+  500.0000ms | 478    -   2.39%
+ 1000.0000ms | 2283   -  11.42%
+ 1500.0000ms | 7154   -  35.77%
+ 2000.0000ms | 1574   -   7.87%
+ 2500.0000ms | 3301   -  16.50%
+ 3000.0000ms | 2779   -  13.89%
+ 3500.0000ms | 2431   -  12.16%
+ 3277.0740ms | max   
+ok
+</code></pre>

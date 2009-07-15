@@ -77,3 +77,11 @@ grep ulimit ~/.bash_profile
 ulimit -n 30720 
 </code></pre>
 
+On Linux:
+
+<pre><code>
+echo "8192 61000" > /proc/sys/net/ipv4/ip_local_port_range
+echo "<your user name>             -       nofile          32768" >>
+/etc/security/limits.conf
+ulimit -n 32768
+</code></pre>

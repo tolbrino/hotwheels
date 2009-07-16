@@ -71,7 +71,9 @@ handle_cast({publish, Msg}, State) ->
     TS = binary_to_list(term_to_binary(Start)),
     JSON = {struct, [{<<"timestamp">>, TS}|L]},
     Msg1 = {message, iolist_to_binary(mochijson2:encode(JSON))},
+    erlang:process_flag(priority, high),
     [ P ! Msg1 || {P, _} <- State#state.subs ],
+    erlang:process_flag(priority, normal),
     io:format("time: ~p~n", [timer:now_diff(now(), Start) / 1000]),
     {noreply, State};
 

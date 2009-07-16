@@ -20,9 +20,7 @@ start(Socket) ->
             [{<<"timestamp">>, binary_to_list(term_to_binary(now()))},
              {<<"token">>, Token}
             ]},
-    Bin = mochijson2:encode(JSON),
-    ok = gen_tcp:send(State#state.socket, [Bin, 1]),
-    {ok, State}.
+    send(mochijson2:encode(JSON), State).
 
 stop(State) ->
     catch client_proxy:detach(State#state.proxy),
@@ -30,16 +28,13 @@ stop(State) ->
 
 forward(Bin, State)
   when is_binary(Bin) ->
-    ok = gen_tcp:send(State#state.socket, [Bin, 1]),
-    {ok, State}.
+    send(Bin, State).
 
 process(heartbeat, State) ->
-    ok = gen_tcp:send(State#state.socket, <<"PING", 1>>),
-    {ok, keep_alive, State};
+    send(<<"PING">>, State);
 
 process(ack, State) ->
-    ok = gen_tcp:send(State#state.socket, <<"ACK", 1>>),
-    {ok, keep_alive, State};
+    send(<<"ACK">>, State);
 
 process(<<>>, State) ->
     {ok, keep_alive, State};
@@ -88,4 +83,13 @@ process({ok, Bin, Rest}, State) ->
      ]} = mochijson2:decode(Bin),
     gen_server:cast(State#state.proxy, {Action, Topic}),
     process(Rest, State).
+
+send(Data, State) ->
+    Keep = case gen_tcp:send(State#state.socket, [Data, 1]) of
+               ok ->
+                   keep_alive;
+               _ ->
+                   shutdown
+           end,
+    {ok, Keep, State}.
 

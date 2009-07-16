@@ -52,8 +52,8 @@ handle_cast({set_socket, Socket}, State) ->
     inet:setopts(Socket, [{active, once}, 
                           {packet, 0}, 
                           binary]),    
-    {ok, Ref} = (State#state.transport):start(Socket),
-    {noreply, State#state{socket = Socket, state = Ref}};
+    {ok, Keep, Ref} = (State#state.transport):start(Socket),
+    keep_alive_or_close(Keep, State#state{socket = Socket, state = Ref});
 
 handle_cast(stop, State) ->
     {stop, normal, State};
@@ -66,8 +66,8 @@ handle_call(Event, From, State) ->
 
 handle_info({message, Msg}, State) ->
     Mod = State#state.transport,
-    {ok, TS} = Mod:forward(Msg, State#state.state),
-    {noreply, State#state{state = TS}};
+    {ok, Keep, TS} = Mod:forward(Msg, State#state.state),
+    keep_alive_or_close(Keep, State#state{state = TS});
 
 handle_info({tcp_closed, Socket}, State) 
   when Socket == State#state.socket ->

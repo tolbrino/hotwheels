@@ -1,0 +1,56 @@
+=== 2009-07-16 12:52:44 === 
+
+Switched to ets:foldl as suggested by Jim Morris and to calculating timestamps for each message, as per the patch sent by Will Glozer.
+
+Here are the latest timings on my MBP 2.93Ghz. The maximum latency seems to be 2.1-2.2s, not sure what to make of the 1.5s.
+
+---
+
+(debug@biggie.local)1> bot:test(flashbot, 20000).
+
+=INFO REPORT==== 16-Jul-2009::12:24:08 ===
+setup: 161030.13ms, good: 20000, bad: 0, run: 168624.54ms
+   0.9540ms | min
+ 500.0000ms | 4858   -  24.29%
+1000.0000ms | 1547   -   7.74%
+1500.0000ms | 2551   -  12.75%
+2000.0000ms | 8044   -  40.22%
+2500.0000ms | 3000   -  15.00%
+2181.8090ms | max
+ok
+
+(debug@biggie.local)3> bot:test(flashbot, 20000).
+
+=INFO REPORT==== 16-Jul-2009::12:36:02 ===
+setup: 14496.73ms, good: 20000, bad: 0, run: 22286.76ms
+   0.5900ms | min
+ 500.0000ms | 2810   -  14.05%
+1000.0000ms | 1228   -   6.14%
+1500.0000ms | 2470   -  12.35%
+2000.0000ms | 10811  -  54.05%
+2500.0000ms | 2681   -  13.41%
+2258.7140ms | max
+ok
+
+(debug@biggie.local)4> bot:test(flashbot, 20000).
+
+=INFO REPORT==== 16-Jul-2009::12:43:19 ===
+setup: 14338.41ms, good: 20000, bad: 0, run: 22433.91ms
+   0.5340ms | min
+ 500.0000ms | 9485   -  47.42%
+1000.0000ms | 6033   -  30.16%
+1500.0000ms | 4482   -  22.41%
+1483.6170ms | max
+ok
+(debug@biggie.local)5> bot:test(flashbot, 20000).
+
+=INFO REPORT==== 16-Jul-2009::12:45:08 ===
+setup: 14256.80ms, good: 20000, bad: 0, run: 22089.76ms
+   3.6720ms | min
+ 500.0000ms | 5368   -  26.84%
+1000.0000ms | 874    -   4.37%
+1500.0000ms | 2688   -  13.44%
+2000.0000ms | 9781   -  48.91%
+2500.0000ms | 1289   -   6.44%
+2210.5790ms | max
+ok

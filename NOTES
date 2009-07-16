@@ -103,3 +103,60 @@ setup: 52532.12ms, good: 20000, bad: 0, run: 60196.70ms
  3500.0000ms | 564    -   2.82%
  3059.0860ms | max   
 ok
+
+=== 2009-07-16 16:36:34 ===
+
+MacBook Pro 2.93Ghz
+
+http://github.com/tinycode/janus/commit/19c3cc954fdbc5ecb7c950510a80f56423ab9ec9
+
+
+(debug@biggie.local)3> bot:test(flashbot, 20000).
+
+=INFO REPORT==== 16-Jul-2009::16:10:26 ===
+setup: 154206.92ms, good: 20000, bad: 0, run: 157926.75ms
+    2.4990ms | min   
+  500.0000ms | 2359   -  11.79%
+ 1000.0000ms | 6323   -  31.61%
+ 1500.0000ms | 4934   -  24.67%
+ 2000.0000ms | 5769   -  28.84%
+ 2500.0000ms | 615    -   3.08%
+ 2078.7770ms | max   
+ok
+(debug@biggie.local)4> bot:test(flashbot, 20000).
+
+=INFO REPORT==== 16-Jul-2009::16:16:36 ===
+setup: 150305.92ms, good: 20000, bad: 0, run: 154186.14ms
+    2.1070ms | min   
+  500.0000ms | 2235   -  11.18%
+ 1000.0000ms | 4840   -  24.20%
+ 1500.0000ms | 5497   -  27.48%
+ 2000.0000ms | 5283   -  26.41%
+ 2500.0000ms | 2145   -  10.72%
+ 2185.3810ms | max   
+ok
+(debug@biggie.local)5> bot:test(flashbot, 20000).
+
+=INFO REPORT==== 16-Jul-2009::16:22:07 ===
+setup: 201656.95ms, good: 20000, bad: 0, run: 205959.23ms
+    2.5690ms | min   
+  500.0000ms | 2573   -  12.86%
+ 1000.0000ms | 2704   -  13.52%
+ 1500.0000ms | 5835   -  29.18%
+ 2000.0000ms | 5527   -  27.63%
+ 2500.0000ms | 3361   -  16.80%
+ 2371.7610ms | max   
+ok
+
+(debug@biggie.local)6> bot:test(flashbot, 20000).
+
+=INFO REPORT==== 16-Jul-2009::16:29:57 ===
+setup: 153129.67ms, good: 20000, bad: 0, run: 157174.14ms
+    3.4600ms | min   
+  500.0000ms | 2682   -  13.41%
+ 1000.0000ms | 3922   -  19.61%
+ 1500.0000ms | 5523   -  27.62%
+ 2000.0000ms | 4728   -  23.64%
+ 2500.0000ms | 3145   -  15.72%
+ 2295.7770ms | max   
+ok

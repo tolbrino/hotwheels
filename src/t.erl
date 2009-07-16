@@ -25,6 +25,10 @@
 
 -include_lib("stdlib/include/ms_transform.hrl").
 
+%%% t:t(lists), t:t([lists, gb_trees]), t:t({lists,reverse}),
+%%% t:t([{lists,reverse}, gb_trees]) or any combination thereof
+%%% will enable tracing for you. t:ut() will disable it.
+
 ut() ->
     dbg:ctp().
 

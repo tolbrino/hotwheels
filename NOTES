@@ -160,3 +160,46 @@ setup: 153129.67ms, good: 20000, bad: 0, run: 157174.14ms
  2500.0000ms | 3145   -  15.72%
  2295.7770ms | max   
 ok
+
+=== 2009-07-16 17:31:09 ===
+
+Mac 
+
+http://github.com/tinycode/janus/commit/c0146220b39ed1e72253c0825a5b5636c68d5ffd
+
+(debug@biggie.local)1> bot:test(flashbot, 20000).
+   18.4400ms | min   
+  500.0000ms | 2642   -  13.21%
+ 1000.0000ms | 4476   -  22.38%
+ 1500.0000ms | 5003   -  25.01%
+ 2000.0000ms | 5415   -  27.07%
+ 2500.0000ms | 2464   -  12.32%
+ 2220.9510ms | max   
+
+=INFO REPORT==== 16-Jul-2009::17:27:39 ===
+setup: 158897.82ms, good: 20000, bad: 0, run: 162816.57ms
+ok
+(debug@biggie.local)2> bot:test(flashbot, 20000).
+
+=INFO REPORT==== 16-Jul-2009::17:28:02 ===
+setup: 16010.66ms, good: 20000, bad: 0, run: 19833.12ms
+   34.1990ms | min   
+  500.0000ms | 3624   -  18.12%
+ 1000.0000ms | 4126   -  20.63%
+ 1500.0000ms | 4339   -  21.70%
+ 2000.0000ms | 5282   -  26.41%
+ 2500.0000ms | 2629   -  13.15%
+ 2192.3160ms | max   
+ok
+(debug@biggie.local)3> bot:test(flashbot, 20000).
+
+=INFO REPORT==== 16-Jul-2009::17:30:47 ===
+setup: 157847.42ms, good: 20000, bad: 0, run: 161841.81ms
+    2.0320ms | min   
+  500.0000ms | 1849   -   9.25%
+ 1000.0000ms | 4416   -  22.08%
+ 1500.0000ms | 5770   -  28.85%
+ 2000.0000ms | 4799   -  24.00%
+ 2500.0000ms | 3166   -  15.83%
+ 2254.9560ms | max   
+ok

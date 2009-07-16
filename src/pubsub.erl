@@ -66,7 +66,7 @@ handle_cast({unsubscribe, Pid}, State) ->
 
 handle_cast({publish, Msg}, State) ->
     io:format("info: ~p~n", [length(State#state.subs)]),
-    spawn_link(fun() -> broadcast(Msg, State) end),
+    broadcast(Msg, State),
     {noreply, State};
 
 handle_cast(Event, State) ->
@@ -103,10 +103,11 @@ unsubscribe1(Pid, State) ->
 broadcast(Msg, State) 
   when is_record(State, state) ->
     {struct, L} = Msg,
-    TS = binary_to_list(term_to_binary(now())),
+    Start = now(),
+    TS = binary_to_list(term_to_binary(Start)),
     JSON = {struct, [{<<"timestamp">>, TS}|L]},
     Msg1 = {message, iolist_to_binary(mochijson2:encode(JSON))},
-    broadcast(Msg1, State#state.subs, now()).
+    broadcast(Msg1, State#state.subs, Start).
 
 broadcast(_, [], Start) ->
     io:format("time: ~p~n", [timer:now_diff(now(), Start) / 1000]),

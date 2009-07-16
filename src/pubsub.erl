@@ -73,7 +73,7 @@ handle_cast({publish, Msg}, State) ->
     F = fun({Pid, _}, _) -> Pid ! Msg1 end,
     F1 = fun() -> 
                  A = now(),
-                 ets:foldr(F, ignore, State#state.subs),
+                 ets:foldl(F, ignore, State#state.subs),
                  io:format("time: ~p~n", [timer:now_diff(now(), A) / 1000])
          end,
     spawn_link(F1),

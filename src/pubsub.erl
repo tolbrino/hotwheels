@@ -66,7 +66,13 @@ handle_cast({unsubscribe, Pid}, State) ->
 
 handle_cast({publish, Msg}, State) ->
     io:format("info: ~p~n", [length(State#state.subs)]),
-    broadcast(Msg, State),
+    Start = now(),
+    {struct, L} = Msg,
+    TS = binary_to_list(term_to_binary(Start)),
+    JSON = {struct, [{<<"timestamp">>, TS}|L]},
+    Msg1 = {message, iolist_to_binary(mochijson2:encode(JSON))},
+    [ P ! Msg1 || {P, _} <- State#state.subs ],
+    io:format("time: ~p~n", [timer:now_diff(now(), Start) / 1000]),
     {noreply, State};
 
 handle_cast(Event, State) ->
@@ -100,19 +106,3 @@ unsubscribe1(Pid, State) ->
     L = lists:keydelete(Pid, 1, State#state.subs),
     {noreply, State#state{subs = L}}.
 
-broadcast(Msg, State) 
-  when is_record(State, state) ->
-    {struct, L} = Msg,
-    Start = now(),
-    TS = binary_to_list(term_to_binary(Start)),
-    JSON = {struct, [{<<"timestamp">>, TS}|L]},
-    Msg1 = {message, iolist_to_binary(mochijson2:encode(JSON))},
-    broadcast(Msg1, State#state.subs, Start).
-
-broadcast(_, [], Start) ->
-    io:format("time: ~p~n", [timer:now_diff(now(), Start) / 1000]),
-    ok;
-
-broadcast(Msg, [{Pid, _}|T], Start) ->
-    Pid ! Msg,
-    broadcast(Msg, T, Start).

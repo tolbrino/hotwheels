@@ -37,7 +37,7 @@ EC2_OPTS = \
 all: compile
 
 compile:
-	erl -make
+	erl -make -smp disable
 
 make_boot: compile
 	erl $(BASIC_OPTS) -s janus_admin make_boot -s init stop

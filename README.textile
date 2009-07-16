@@ -79,6 +79,13 @@ grep ulimit ~/.bash_profile
 ulimit -n 30720 
 </code></pre>
 
+Also, you won't be able to go past 1024 clients with Erlang 
+on Mac OSX, even with kernel poll enabled (+K true). 
+
+Edit FD_SETSIZE in /usr/include/sys/select.h, i.e. change 
+__DARWIN_FD_SETSIZE in /usr/include/sys/_structs.h 
+and recompile Erlang with --enable-kernel-poll.
+
 On Linux:
 
 <pre><code>

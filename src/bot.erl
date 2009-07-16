@@ -23,6 +23,8 @@
 
 -export([run/6, test/1, test/2, test/4, publish/5]).
 
+-include_lib("kernel/include/inet.hrl").
+
 -record(state, {
           bot,
           barrier,
@@ -47,6 +49,7 @@
 run(Bot, Host, Port, Message, Expected, N) 
   when is_tuple(Message),
        is_integer(N) ->
+    {ok, #hostent{h_addr_list = [Addr | _]}} = inet:gethostbyname(Host),    
     {ok, Barrier} = barrier:start(counter, N),
     State = #state{
       bot = Bot,
@@ -57,7 +60,7 @@ run(Bot, Host, Port, Message, Expected, N)
       min = 99999999,
       max = 0,
       avg = 0,
-      host = Host,
+      host = Addr,
       port = Port,
       message = Message,
       expected = Expected,

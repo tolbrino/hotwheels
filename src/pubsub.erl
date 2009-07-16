@@ -67,10 +67,12 @@ handle_cast({unsubscribe, Pid}, State) ->
 handle_cast({publish, Msg}, State) ->
     io:format("info: ~p~n", [ets:info(State#state.subs)]),
     {struct, L} = Msg,
-    JSON = {struct, [{<<"timestamp">>, binary_to_list(term_to_binary(now()))}|L]},
-    Msg1 = {message, iolist_to_binary(mochijson2:encode(JSON))},
-    %% F = fun({Pid, _}, _) -> gen_server:cast(Pid, Msg1) end,
-    F = fun({Pid, _}, _) -> Pid ! Msg1 end,
+    F = fun({Pid, _}, _) ->
+                TS = binary_to_list(term_to_binary(now())),
+                JSON = {struct, [{<<"timestamp">>, TS}|L]},
+                Msg1 = {message, iolist_to_binary(mochijson2:encode(JSON))},
+                Pid ! Msg1
+        end,
     F1 = fun() -> 
                  A = now(),
                  ets:foldl(F, ignore, State#state.subs),

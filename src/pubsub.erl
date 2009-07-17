@@ -21,7 +21,7 @@
 
 -module(pubsub).
 
--export([publish/2, subscribe/3, unsubscribe/2,
+-export([publish/2, subscribe/2, unsubscribe/2,
          start/1, stop/1]).
 
 -export([init/1, handle_call/3, handle_cast/2, 
@@ -35,8 +35,8 @@
 publish(Ref, Msg) ->
     gen_server:cast(Ref, {publish, Msg}).
 
-subscribe(Ref, Pid, Send) ->
-    gen_server:cast(Ref, {subscribe, Pid, Send}).
+subscribe(Ref, Pid) ->
+    gen_server:cast(Ref, {subscribe, Pid}).
 
 unsubscribe(Ref, Pid) ->
     gen_server:cast(Ref, {unsubscribe, Pid}).
@@ -54,11 +54,11 @@ init([Topic]) ->
 handle_cast(stop, State) ->
     {stop, normal, State};
 
-handle_cast({subscribe, Pid, Send}, State) ->
+handle_cast({subscribe, Pid}, State) ->
     %% automatically unsubscribe when dead
     Ref = erlang:monitor(process, Pid),
     Pid ! ack,
-    ets:insert(State#state.subs, {Pid, Ref, Send}),
+    ets:insert(State#state.subs, {Pid, Ref}),
     {noreply, State};
 
 handle_cast({unsubscribe, Pid}, State) ->
@@ -70,12 +70,13 @@ handle_cast({publish, Msg}, State) ->
     {struct, L} = Msg,
     TS = binary_to_list(term_to_binary(Start)),
     JSON = {struct, [{<<"timestamp">>, TS}|L]},
-    Bin = iolist_to_binary(mochijson2:encode(JSON)),
-    F = fun({_Pid, _Ref, Send}, _) -> Send(Bin) end,
+    Msg1 = {message, iolist_to_binary(mochijson2:encode(JSON))},
+    F = fun({Pid, _Ref}, _) -> Pid ! Msg1 end,
     erlang:process_flag(priority, high),
     ets:foldr(F, ignore, State#state.subs),
+    End = now(),
     erlang:process_flag(priority, normal),
-    io:format("time: ~p~n", [timer:now_diff(now(), Start) / 1000]),
+    io:format("time: ~p~n", [timer:now_diff(End, Start) / 1000]),
     {noreply, State};
 
 handle_cast(Event, State) ->

@@ -85,7 +85,7 @@ handle_cast({detach, _}, State) ->
     {noreply, State};
 
 handle_cast({<<"subscribe">>, Topic}, State) ->
-    topman:subscribe(self(), Topic, State#state.send),
+    topman:subscribe(self(), Topic),
     {noreply, State};
 
 handle_cast({<<"unsubscribe">>, Topic}, State) ->
@@ -105,12 +105,12 @@ handle_call(messages, _From, State) ->
 handle_call(Event, From, State) ->
     {stop, {unknown_call, Event, From}, State}.
 
-handle_info(Event = {message, Msg}, State) 
+handle_info({message, Msg}, State) 
   when is_pid(State#state.parent),
        is_binary(Msg) ->
     %% send immediately
-    %% gen_server:cast(State#state.parent, Event),
-    State#state.parent ! Event,
+    %% State#state.parent ! Event,
+    (State#state.send)(Msg), % to the socket!
     {noreply, start_heartbeat(State)};
 
 handle_info({message, Msg}, State) ->

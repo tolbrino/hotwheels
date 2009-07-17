@@ -25,7 +25,7 @@
 
 -module(topman).
 
--export([publish/2, subscribe/3, unsubscribe/2,
+-export([publish/2, subscribe/2, unsubscribe/2,
          start/0, stop/1]).
 
 -export([init/1, handle_call/3, handle_cast/2, 
@@ -44,15 +44,13 @@ publish(Msg, Topic)
   when is_list(Topic) ->
     publish(Msg, list_to_binary(Topic)).
 
-subscribe(Pid, Topic, Send) 
-  when is_binary(Topic),
-       is_function(Send) ->
-    gen_server:cast(?MODULE, {subscribe, Pid, Topic, Send});
+subscribe(Pid, Topic) 
+  when is_binary(Topic) ->
+    gen_server:cast(?MODULE, {subscribe, Pid, Topic});
 
-subscribe(Pid, Topic, Send)
-  when is_list(Topic),
-       is_function(Send) ->
-    subscribe(Pid, list_to_binary(Topic), Send).
+subscribe(Pid, Topic)
+  when is_list(Topic) ->
+    subscribe(Pid, list_to_binary(Topic)).
 
 unsubscribe(Pid, Topic)
   when is_binary(Topic) ->
@@ -79,9 +77,9 @@ init([]) ->
 handle_cast(stop, State) ->
     {stop, normal, State};
 
-handle_cast({subscribe, Pid, Topic, Send}, State) ->
+handle_cast({subscribe, Pid, Topic}, State) ->
     {Srv, State1} = ensure_server(Topic, State),
-    pubsub:subscribe(Srv, Pid, Send),
+    pubsub:subscribe(Srv, Pid),
     {noreply, State1};
 
 handle_cast({unsubscribe, Pid, Topic}, State) ->

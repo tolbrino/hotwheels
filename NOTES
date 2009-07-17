@@ -444,3 +444,88 @@ setup: 30307.11ms, good: 20000, bad: 0, run: 35555.13ms
  2500.0000ms | 992    -   4.96%
  2318.4370ms | max   
 ok
+
+*** ec2, {delay_send, false}, 5 bot instances
+
+(debug@ip-10-244-145-238.ec2.internal)8> bot:test(flashbot, 20000, 'ip-10-244-47-97', 8081).
+
+=INFO REPORT==== 17-Jul-2009::12:36:41 ===
+setup: 29682.35ms, good: 20000, bad: 0, run: 31418.52ms
+  -16.3290ms | min   
+  500.0000ms | 6837   -  34.19%
+ 1000.0000ms | 6815   -  34.08%
+ 1500.0000ms | 6069   -  30.34%
+ 2000.0000ms | 279    -   1.40%
+ 1515.0380ms | max   
+ok
+(debug@ip-10-244-145-238.ec2.internal)9> bot:test(flashbot, 20000, 'ip-10-244-47-97', 8081).
+
+=INFO REPORT==== 17-Jul-2009::12:37:20 ===
+setup: 29257.24ms, good: 20000, bad: 0, run: 31161.86ms
+  -16.4260ms | min   
+  500.0000ms | 7866   -  39.33%
+ 1000.0000ms | 5736   -  28.68%
+ 1500.0000ms | 6167   -  30.84%
+ 2000.0000ms | 231    -   1.16%
+ 1621.8330ms | max   
+ok
+(debug@ip-10-244-145-238.ec2.internal)10> bot:test(flashbot, 20000, 'ip-10-244-47-97', 8081).
+
+=INFO REPORT==== 17-Jul-2009::12:37:58 ===
+setup: 29967.48ms, good: 20000, bad: 0, run: 33883.14ms
+  -17.8120ms | min   
+  500.0000ms | 7208   -  36.04%
+ 1000.0000ms | 6833   -  34.16%
+ 1500.0000ms | 5247   -  26.23%
+ 2000.0000ms | 519    -   2.60%
+ 2500.0000ms | 11     -   0.06%
+ 3000.0000ms | 0      -   0.00%
+ 3500.0000ms | 6      -   0.03%
+ 4000.0000ms | 176    -   0.88%
+ 3891.9700ms | max   
+ok
+(debug@ip-10-244-145-238.ec2.internal)11> bot:test(flashbot, 20000, 'ip-10-244-47-97', 8081).
+
+=INFO REPORT==== 17-Jul-2009::12:52:04 ===
+setup: 30005.06ms, good: 20000, bad: 0, run: 31949.28ms
+    6.4800ms | min   
+  500.0000ms | 8337   -  41.69%
+ 1000.0000ms | 7099   -  35.49%
+ 1500.0000ms | 4564   -  22.82%
+ 1496.5790ms | max   
+ok
+
+=== 2009-07-17 14:12:13 === 
+
+Mac, 1 middleman, 075a6df131766cb73e30408100dddf5f5b17eab7
+
+(debug@biggie.local)1> bot:test(flashbot, 20000).
+   63.5300ms | min   
+
+=INFO REPORT==== 17-Jul-2009::14:01:54 ===
+setup: 244698.87ms, good: 20000, bad: 0, run: 252627.33ms
+  500.0000ms | 6606   -  33.03%
+ 1000.0000ms | 5778   -  28.89%
+ 1500.0000ms | 7616   -  38.08%
+ 1093.3640ms | max   
+ok
+(debug@biggie.local)2> bot:test(flashbot, 20000).
+
+=INFO REPORT==== 17-Jul-2009::14:05:34 ===
+setup: 16031.71ms, good: 20000, bad: 0, run: 23430.96ms
+   31.6890ms | min   
+  500.0000ms | 5374   -  26.87%
+ 1000.0000ms | 11861  -  59.30%
+ 1500.0000ms | 2765   -  13.82%
+ 1168.1030ms | max   
+ok
+(debug@biggie.local)3> bot:test(flashbot, 20000).
+
+=INFO REPORT==== 17-Jul-2009::14:10:12 ===
+setup: 152681.84ms, good: 20000, bad: 0, run: 159896.70ms
+   87.0330ms | min   
+  500.0000ms | 6706   -  33.53%
+ 1000.0000ms | 12366  -  61.83%
+ 1500.0000ms | 928    -   4.64%
+ 1018.7410ms | max   
+ok

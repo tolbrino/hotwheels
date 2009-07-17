@@ -68,7 +68,7 @@ handle_cast({publish, Msg}, State) ->
     io:format("info: ~p~n", [ets:info(State#state.subs)]),
     Start = now(),
     {struct, L} = Msg,
-    TS = binary_to_list(term_to_binary(Start)),
+    TS = tuple_to_list(Start),
     JSON = {struct, [{<<"timestamp">>, TS}|L]},
     Msg1 = {message, iolist_to_binary(mochijson2:encode(JSON))},
     F = fun({Pid, _Ref}, _) -> Pid ! Msg1 end,

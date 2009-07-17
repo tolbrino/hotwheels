@@ -18,7 +18,7 @@ start(Socket) ->
       token = Token
      },
     JSON = {struct,
-            [{<<"timestamp">>, binary_to_list(term_to_binary(now()))},
+            [{<<"timestamp">>, tuple_to_list(now())},
              {<<"token">>, Token}
             ]},
     send(mochijson2:encode(JSON), State).

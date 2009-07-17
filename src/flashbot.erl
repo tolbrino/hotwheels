@@ -148,7 +148,7 @@ handle_info({tcp, Sock, Bin}, Where, State) ->
             JSON = mochijson2:decode(Bin1),
             %% grab the timestamp
             {struct, [{<<"timestamp">>, TS}|L]} = JSON,
-            Delta = timer:now_diff(Now, binary_to_term(list_to_binary(TS))),
+            Delta = timer:now_diff(Now, list_to_tuple(TS)),
             State1 = State#state{latency = Delta, data = undefined},
             case ?MODULE:Where({struct, L}, State1) of 
                 {next_state, Where1, State2} ->

@@ -21,7 +21,7 @@
 
 -module(pubsub).
 
--export([publish/2, subscribe/2, unsubscribe/2,
+-export([publish/2, subscribe/3, unsubscribe/2,
          start/1, stop/1]).
 
 -export([init/1, handle_call/3, handle_cast/2, 
@@ -29,14 +29,14 @@
 
 -record(state, {
           topic,
-          subs = []
+          subs = ets:new(subs, [set])
          }).
 
 publish(Ref, Msg) ->
     gen_server:cast(Ref, {publish, Msg}).
 
-subscribe(Ref, Pid) ->
-    gen_server:cast(Ref, {subscribe, Pid}).
+subscribe(Ref, Pid, Send) ->
+    gen_server:cast(Ref, {subscribe, Pid, Send}).
 
 unsubscribe(Ref, Pid) ->
     gen_server:cast(Ref, {unsubscribe, Pid}).
@@ -54,25 +54,26 @@ init([Topic]) ->
 handle_cast(stop, State) ->
     {stop, normal, State};
 
-handle_cast({subscribe, Pid}, State) ->
+handle_cast({subscribe, Pid, Send}, State) ->
     %% automatically unsubscribe when dead
     Ref = erlang:monitor(process, Pid),
-    L = lists:keydelete(Pid, 1, State#state.subs),
     Pid ! ack,
-    {noreply, State#state{subs = [{Pid, Ref}|L]}};
+    ets:insert(State#state.subs, {Pid, Ref, Send}),
+    {noreply, State};
 
 handle_cast({unsubscribe, Pid}, State) ->
     unsubscribe1(Pid, State);
 
 handle_cast({publish, Msg}, State) ->
-    io:format("info: ~p~n", [length(State#state.subs)]),
+    io:format("info: ~p~n", [ets:info(State#state.subs)]),
     Start = now(),
     {struct, L} = Msg,
     TS = binary_to_list(term_to_binary(Start)),
     JSON = {struct, [{<<"timestamp">>, TS}|L]},
-    Msg1 = {message, iolist_to_binary(mochijson2:encode(JSON))},
+    Bin = iolist_to_binary(mochijson2:encode(JSON)),
+    F = fun({_Pid, _Ref, Send}, _) -> Send(Bin) end,
     erlang:process_flag(priority, high),
-    [ P ! Msg1 || {P, _} <- State#state.subs ],
+    ets:foldr(F, ignore, State#state.subs),
     erlang:process_flag(priority, normal),
     io:format("time: ~p~n", [timer:now_diff(now(), Start) / 1000]),
     {noreply, State};
@@ -99,12 +100,11 @@ code_change(_OldVsn, State, _Extra) ->
     {ok, State}.
 
 unsubscribe1(Pid, State) ->
-    case lists:keyfind(Pid, 1, State#state.subs) of
-        false ->
-            ok;
-        {Pid, Ref} ->
-            erlang:demonitor(Ref)
+    case ets:lookup(State#state.subs, Pid) of
+        [{_, Ref, _}] ->
+            erlang:demonitor(Ref),
+            ets:delete(State#state.subs, Pid);
+        _ ->
+            ok
     end,
-    L = lists:keydelete(Pid, 1, State#state.subs),
-    {noreply, State#state{subs = L}}.
-
+    {noreply, State}.

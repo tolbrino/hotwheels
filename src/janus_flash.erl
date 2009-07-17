@@ -10,7 +10,8 @@
          }).
 
 start(Socket) ->
-    {ok, Proxy, Token} = client_proxy:start(),
+    Send = fun(Bin) -> gen_tcp:send(Socket, [Bin, 1]) end,
+    {ok, Proxy, Token} = client_proxy:start(Send),
     State = #state{
       socket = Socket, 
       proxy = Proxy, 

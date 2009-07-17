@@ -22,8 +22,8 @@
 -module(client_proxy).
 -behavior(gen_server).
 
--export([start/0, stop/1, locate/1, poll/1,
-         attach/1, detach/1]).
+-export([start/1, stop/1, locate/1, poll/1,
+         attach/2, detach/1]).
 
 -export([init/1, handle_call/3, handle_cast/2, 
          handle_info/2, terminate/2, code_change/3]).
@@ -35,6 +35,7 @@
 -record(state, {
           token,
           parent,
+          send,
           heartbeat,
           killswitch,
           messages
@@ -46,42 +47,45 @@ locate(Token) ->
 poll(Ref) ->
     gen_server:call(Ref, messages).
 
-attach(Ref) ->
-    gen_server:cast(Ref, {attach, self()}).
+attach(Ref, Send) ->
+    gen_server:cast(Ref, {attach, self(), Send}).
 
 detach(Ref) ->
     gen_server:cast(Ref, {detach, self()}).
 
-start() ->
+start(Send) ->
     Token = common:random_token(),
-    {ok, Pid} = gen_server:start_link(?MODULE, [Token, self()], []),
+    {ok, Pid} = gen_server:start_link(?MODULE, [Token, self(), Send], []),
     {ok, Pid, Token}.
 
 stop(Ref) ->
     gen_server:cast(Ref, stop).
 
-init([Token, Parent]) ->
+init([Token, Parent, Send]) ->
     process_flag(trap_exit, true),
     ok = mapper:add(client_proxy_mapper, Token),
     State = #state{
       token = Token,
       parent = Parent,
+      send = Send,
       messages = []
      },
    {ok, State}.
 
-handle_cast({attach, Parent}, State) ->
-    {noreply, State#state{parent = Parent}};
+handle_cast({attach, Parent, Send}, State) ->
+    {noreply, State#state{parent = Parent, send = Send}};
 
 handle_cast({detach, Who}, State) 
   when Who == State#state.parent ->
-    {noreply, State#state{parent = disconnected}};
+    %% transport is gone, session stays
+    Send = fun(_) -> ok end,
+    {noreply, State#state{parent = disconnected, send = Send}};
 
 handle_cast({detach, _}, State) ->
     {noreply, State};
 
 handle_cast({<<"subscribe">>, Topic}, State) ->
-    topman:subscribe(self(), Topic),
+    topman:subscribe(self(), Topic, State#state.send),
     {noreply, State};
 
 handle_cast({<<"unsubscribe">>, Topic}, State) ->

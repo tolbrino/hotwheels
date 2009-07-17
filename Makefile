@@ -12,7 +12,7 @@ EC2_USER_DATA = `priv/user_data`
 
 BASIC_OPTS = \
 	-pa $(LOAD_PATH) \
-	+A 8 +K true +P 60000 -smp disable \
+	+A 8 +K true +P 120000 -smp disable \
 	$(NULL)
 
 OPTS = \

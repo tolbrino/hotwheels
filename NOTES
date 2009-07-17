@@ -664,3 +664,37 @@ setup: 30130.17ms, good: 20000, bad: 0, run: 33640.30ms
  3500.0000ms | 3302   -  16.51%
  3495.1020ms | max   
 ok
+
+=== 4febf5e1a1c29590fffc644e8a2a42175b24ac18
+
+*** Mac 
+
+(debug@biggie.local)3> bot:test(flashbot, 20000).
+
+=INFO REPORT==== 17-Jul-2009::21:31:19 ===
+setup: 20744.28ms, good: 20000, bad: 0, run: 25369.73ms
+   72.0650ms | min   
+  500.0000ms | 932    -   4.66%
+ 1000.0000ms | 3269   -  16.34%
+ 1500.0000ms | 15799  -  79.00%
+ 1279.9050ms | max   
+ok
+(debug@biggie.local)4> bot:test(flashbot, 20000).
+
+=INFO REPORT==== 17-Jul-2009::21:31:51 ===
+setup: 15196.54ms, good: 20000, bad: 0, run: 19198.90ms
+   42.2200ms | min   
+  500.0000ms | 8304   -  41.52%
+ 1000.0000ms | 11696  -  58.48%
+  967.6590ms | max   
+ok
+(debug@biggie.local)5> bot:test(flashbot, 20000).
+
+=INFO REPORT==== 17-Jul-2009::21:34:43 ===
+setup: 160699.13ms, good: 20000, bad: 0, run: 164890.45ms
+  175.7330ms | min   
+  500.0000ms | 6727   -  33.63%
+ 1000.0000ms | 7692   -  38.46%
+ 1500.0000ms | 5581   -  27.91%
+ 1089.7920ms | max   
+ok
